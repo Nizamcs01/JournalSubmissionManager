@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Journal Submission Manager — secure web application for clients, journals, submissions, status history and Excel reports.">
+  <title>Journal Submission Manager</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <section id="authView" class="auth-view">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <img class="brand-logo" src="assets/cs-logo.png" alt="CS Software Solutions logo">
+        <h1>Journal Submission Manager</h1>
+        <p>Securely manage clients, journals, papers and submission status.</p>
+      </div>
+
+      <div id="authNotice" class="notice hidden"></div>
+
+      <form id="loginForm" class="auth-form" autocomplete="on">
+        <label>Email<input id="loginEmail" type="email" autocomplete="username" placeholder="you@example.com" required></label>
+        <label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password" required></label>
+        <button class="btn accent full" type="submit">Sign in</button>
+      </form>
+
+      <div class="auth-links">
+        <button id="forgotPasswordBtn" type="button" class="link-btn">Forgot password?</button>
+      </div>
+
+      <p class="auth-help">Accounts are created and managed in Firebase. New public sign-ups are disabled for this application by design.</p>
+      <div id="configHelp" class="auth-config hidden"></div>
+    </div>
+  </section>
+
+  <section id="resetView" class="auth-view hidden">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <img class="brand-logo" src="assets/cs-logo.png" alt="CS Software Solutions logo">
+        <h1>Set New Password</h1>
+        <p>Choose a new password for your Journal Submission Manager account.</p>
+      </div>
+      <div id="resetNotice" class="notice hidden"></div>
+      <form id="resetForm" class="auth-form">
+        <label>New Password<input id="newPassword" type="password" minlength="8" required placeholder="At least 8 characters"></label>
+        <label>Confirm Password<input id="confirmPassword" type="password" minlength="8" required placeholder="Repeat password"></label>
+        <button class="btn accent full" type="submit">Update Password</button>
+      </form>
+      <div class="auth-links"><button id="backToLoginBtn" type="button" class="link-btn">Back to sign in</button></div>
+    </div>
+  </section>
+
+  <section id="appView" class="app-shell hidden">
+    <header class="app-header">
+      <div class="header-left">
+        <img class="header-logo" src="assets/cs-logo.png" alt="CS Software Solutions logo">
+        <div class="header-brand-text">
+          <div class="header-title">Journal Submission Manager</div>
+          <div class="header-subtitle">Secure Cloud • Firebase • Excel Export</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="signed-in">Signed in as <strong id="userEmail">—</strong></div>
+        <input id="excelImportInput" class="hidden" type="file" accept=".xlsx,.xls" aria-label="Upload Excel">
+        <button id="excelImportBtn" class="btn header-btn" type="button">Upload Excel</button>
+        <button id="backupBtn" class="btn header-btn" type="button">Backup Data</button>
+        <button id="signOutBtn" class="btn header-btn" type="button">Sign out</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <nav class="tabs" id="mainNav" aria-label="Main navigation">
+        <button data-view="dashboard" class="tab active" type="button">Dashboard</button>
+        <button data-view="submissions" class="tab" type="button">Submissions</button>
+        <button data-view="clients" class="tab" type="button">Clients</button>
+        <button data-view="journals" class="tab" type="button">Journals</button>
+        <button data-view="reports" class="tab" type="button">Reports &amp; Export</button>
+      </nav>
+      <main id="viewContainer"></main>
+    </div>
+  </section>
+
+  <div id="modalRoot"></div>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="config.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
