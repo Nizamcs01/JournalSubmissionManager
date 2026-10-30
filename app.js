@@ -318,7 +318,7 @@ import {
   function submissionTable(rows) {
     if (!rows.length) return `<div class="empty">No submissions found.</div>`;
     return `<div class="table-scroll"><table class="data-table submission-table"><thead><tr>
-      <th>#</th><th>Client</th><th>Paper Title</th><th>Journal</th><th>Submission Date</th><th>Submission ID</th><th>Quartile</th><th>Indexing</th><th>APC</th><th>Status</th><th>Author</th><th>Actions</th>
+      <th>#</th><th>Client</th><th>Paper Title</th><th>Journal</th><th>Submission Date</th><th>Submission ID</th><th>Quartile</th><th>Indexing</th><th>APC</th><th>Status</th><th>Username</th><th>Password</th><th>Author</th><th>Actions</th>
     </tr></thead><tbody>${rows.map((row, idx) => {
       const c = clientById(row.client_id);
       const j = journalById(row.journal_id);
@@ -333,6 +333,8 @@ import {
         <td>${esc(row.indexing || "") || "—"}</td>
         <td>${formatApc(row.apc)}</td>
         <td><span class="status ${slugStatus(row.current_status)}">${esc(row.current_status || "Not Set")}</span></td>
+        <td>${esc(row.journal_username || "") || "—"}</td>
+        <td>${row.journal_password ? "••••••••" : "—"}</td>
         <td>${esc(row.corresponding_author || "") || "—"}</td>
         <td><div class="list-actions"><button class="btn small" data-action="view-sub" data-id="${esc(row.id)}">View</button><button class="btn small" data-action="edit-sub" data-id="${esc(row.id)}">Edit</button><button class="btn small danger" data-action="delete-sub" data-id="${esc(row.id)}">Delete</button></div></td>
       </tr>`;
@@ -434,6 +436,8 @@ import {
       <label>Indexing<select id="sIndexing">${selectOptions(INDEXING, row?.indexing || "")}</select></label>
       <label>APC (₹)<input id="sApc" inputmode="decimal" value="${esc(row?.apc ?? "")}" placeholder="Optional numeric amount"></label>
       <label>Current Status<select id="sStatus">${selectOptions(STATUSES, row?.current_status || (editing ? "" : "Submitted"))}</select></label>
+      <label>Journal Username<input id="sJournalUsername" value="${esc(row?.journal_username || "")}" placeholder="Optional journal login username"></label>
+      <label>Journal Password<input id="sJournalPassword" type="password" value="${esc(row?.journal_password || "")}" placeholder="Optional journal login password" autocomplete="off"></label>
       <label>Corresponding Author<input id="sAuthor" value="${esc(row?.corresponding_author || "")}" placeholder="Optional"></label>
       <label>Email<input id="sEmail" type="email" value="${esc(row?.email || "")}" placeholder="Optional"></label>
       <label>Last Updated<input id="sLastUpdated" type="date" value="${esc(row?.last_updated || (editing ? "" : today()))}"></label>
@@ -468,6 +472,8 @@ import {
       indexing: get("#sIndexing") || null,
       apc,
       current_status: get("#sStatus") || null,
+      journal_username: get("#sJournalUsername") || null,
+      journal_password: get("#sJournalPassword") || null,
       corresponding_author: get("#sAuthor") || null,
       email: email || null,
       remarks: get("#sRemarks") || null,
@@ -560,7 +566,8 @@ import {
       ["Client Name", client?.name], ["Client Phone", client?.phone], ["Client Email", client?.email], ["Organization", client?.organization],
       ["Paper Title", row.paper_title], ["Journal Name", journal?.name], ["Publisher", journal?.publisher], ["Submission Date", fmtDate(row.submission_date)],
       ["Submission ID", row.submission_id], ["Journal Quartile", row.journal_quartile], ["Indexing", row.indexing], ["APC", formatApc(row.apc)],
-      ["Current Status", row.current_status || "Not Set"], ["Corresponding Author", row.corresponding_author], ["Email", row.email],
+      ["Current Status", row.current_status || "Not Set"], ["Journal Username", row.journal_username], ["Journal Password", row.journal_password],
+      ["Corresponding Author", row.corresponding_author], ["Email", row.email],
       ["Last Updated", fmtDate(row.last_updated)], ["Remarks", row.remarks]
     ];
     const body = `<div class="detail-grid">${fields.map(([label,value]) => `<div class="detail-item"><div class="detail-label">${esc(label)}</div><div class="detail-value">${esc(value || "—")}</div></div>`).join("")}</div>
@@ -610,6 +617,8 @@ import {
       "Indexing": row.indexing || "",
       "APC (₹)": row.apc ?? "",
       "Current Status": row.current_status || "Not Set",
+      "Journal Username": row.journal_username || "",
+      "Journal Password": row.journal_password || "",
       "Corresponding Author": row.corresponding_author || "",
       "Email": row.email || "",
       "Remarks": row.remarks || "",
@@ -835,12 +844,16 @@ import {
 
       const status = normalizeImportedStatus(rawStatus);
       const email = rowValue(row, map, "Email");
+      const journalUsername = rowValue(row, map, "Username", "User Name", "Journal Username");
+      const journalPassword = rowValue(row, map, "Password", "Journal Password");
       const remarks = rowValue(row, map, "Remarks");
       const title = String(paperTitle || journalName).trim();
       const existing = importedSubmissionMatch(client.id, journal.id, title, submissionDate);
       const payload = {
         client_id: client.id, paper_title: title, journal_id: journal.id, submission_date: submissionDate,
         submission_id: null, journal_quartile: quartile, indexing, apc: null, current_status: status,
+        journal_username: journalUsername ? String(journalUsername).trim() : null,
+        journal_password: journalPassword ? String(journalPassword).trim() : null,
         corresponding_author: null, email: email ? String(email).trim() : null,
         remarks: remarks ? String(remarks).trim() : null, last_updated: null, updated_at: isoNow()
       };
@@ -851,6 +864,8 @@ import {
         if (!existing.journal_quartile && quartile) patch.journal_quartile = quartile;
         if (!existing.indexing && indexing) patch.indexing = indexing;
         if (!existing.email && payload.email) patch.email = payload.email;
+        if (!existing.journal_username && payload.journal_username) patch.journal_username = payload.journal_username;
+        if (!existing.journal_password && payload.journal_password) patch.journal_password = payload.journal_password;
         if (!existing.remarks && payload.remarks) patch.remarks = payload.remarks;
         if (Object.keys(patch).length) { await updateRecord("submissions", existing.id, patch); stats.updated += 1; }
         else stats.skipped += 1;
@@ -897,7 +912,7 @@ import {
         await insertRecord("submissions", {
           id: makeId("sub"), client_id: client.id, paper_title: `Accepted paper - ${String(journalName).trim()}`,
           journal_id: journal.id, submission_date: submissionDate, submission_id: null, journal_quartile: null,
-          indexing: journal.indexing || null, apc: null, current_status: "Accepted", corresponding_author: null,
+          indexing: journal.indexing || null, apc: null, current_status: "Accepted", journal_username: null, journal_password: null, corresponding_author: null,
           email: client.email || null, remarks: "Imported from Accepted Jouornals sheet", last_updated: excelDateToIso(rowValue(row, map, "Acceptance date", "Acceptance Date")), updated_at: isoNow()
         });
         stats.imported += 1;
