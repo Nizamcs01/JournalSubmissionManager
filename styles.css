@@ -98,7 +98,7 @@ textarea{min-height:90px;resize:vertical}
 .toolbar .field.search{min-width:260px;flex:1}
 .toolbar label{font-size:11px}
 .table-scroll{overflow:auto;background:#fff;border:1px solid var(--line)}
-.submission-table{min-width:1280px}
+.submission-table{min-width:1480px}
 .list-actions{display:flex;gap:6px;white-space:nowrap}
 .table-title{font-weight:600;max-width:310px}
 .table-sub{font-size:10px;color:var(--muted);margin-top:3px}
