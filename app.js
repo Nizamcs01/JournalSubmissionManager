@@ -1,5 +1,7 @@
 /* Journal Submission Manager — HTML/CSS/JS + Firebase Authentication/Cloud Firestore */
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
 import {
   getAuth,
   browserLocalPersistence,
@@ -191,7 +193,6 @@ import {
     }
   }
 
-
   function showReset(message = "", type = "") {
     $("#authView").classList.add("hidden");
     $("#resetView").classList.remove("hidden");
@@ -207,7 +208,6 @@ import {
     }
   }
 
-
   function showApp() {
     $("#authView").classList.add("hidden");
     $("#resetView").classList.add("hidden");
@@ -217,12 +217,10 @@ import {
       session?.user?.email || "Signed-in user";
   }
 
-
   function renderConfigState() {
     const notice = $("#authNotice");
     const help = $("#configHelp");
-    const loginButton =
-      $("#loginForm button[type=submit]");
+    const loginButton = $("#loginForm button[type=submit]");
     const forgot = $("#forgotPasswordBtn");
 
     if (!hasConfig) {
@@ -238,9 +236,7 @@ import {
 
       loginButton.disabled = true;
       forgot.disabled = true;
-
-      loginButton.title =
-        "Configure Firebase first";
+      loginButton.title = "Configure Firebase first";
     } else {
       notice.className = "notice hidden";
       help.className = "auth-config hidden";
@@ -265,14 +261,12 @@ import {
     return state.journals.find(j => j.id === id);
   }
 
-
   const collectionMap = {
     clients: "clients",
     journals: "journals",
     submissions: "submissions",
     history: "status_history"
   };
-
 
   function userCollection(key) {
     if (!db || !session?.user?.uid) {
@@ -292,7 +286,6 @@ import {
       collectionName
     );
   }
-
 
   async function loadCloud() {
     if (!db || !session) {
@@ -317,7 +310,6 @@ import {
     state.history = history;
   }
 
-
   async function selectAll(key, orderByField) {
     const snapshot = await getDocs(
       query(
@@ -331,7 +323,6 @@ import {
       ...item.data()
     }));
   }
-
 
   async function insertRecord(key, row) {
     const payload = {
@@ -354,7 +345,6 @@ import {
 
     return data;
   }
-
 
   async function updateRecord(key, id, patch) {
     const ref = doc(
@@ -385,7 +375,6 @@ import {
     return state[key][idx];
   }
 
-
   async function deleteRecord(key, id) {
     await deleteDoc(
       doc(userCollection(key), id)
@@ -394,7 +383,6 @@ import {
     state[key] =
       state[key].filter(r => r.id !== id);
   }
-
 
   async function addHistory(
     submissionId,
@@ -431,7 +419,6 @@ import {
       {}
     );
   }
-
 
   function matchesFilters(
     row,
@@ -508,7 +495,6 @@ import {
     return true;
   }
 
-
   function filteredSubmissions() {
     return [...state.submissions]
       .filter(row => matchesFilters(row))
@@ -562,7 +548,6 @@ import {
 
     bindViewEvents();
   }
-
 
   function kpi(label, value) {
     return `
@@ -621,9 +606,7 @@ import {
           <section class="panel">
             <div class="panel-head">
               <div>
-                <h3>
-                  Status Breakdown
-                </h3>
+                <h3>Status Breakdown</h3>
                 <div class="sub">
                   Current status of all submissions
                 </div>
@@ -656,7 +639,6 @@ import {
       </div>
     `;
   }
-
 
   function statusBreakdownTable(counts) {
     const rows =
@@ -710,7 +692,6 @@ import {
       </table>
     `;
   }
-
 
   function monthlyCounts(
     months = 12
@@ -780,7 +761,6 @@ import {
       })
       .reverse();
   }
-
 
   function monthlyTable(rows) {
     return `
@@ -1038,7 +1018,6 @@ import {
     `;
   }
 
-
   function formatApc(value) {
     if (
       value === null ||
@@ -1268,7 +1247,7 @@ import {
 
 
   /* =========================================================
-     Client View
+     Clients View
      ========================================================= */
 
   function clientsView() {
@@ -1398,6 +1377,16 @@ import {
                                   Edit
                                 </button>
 
+                                <button
+                                  class="btn small danger"
+                                  data-action="delete-client"
+                                  data-id="${esc(
+                                    c.id
+                                  )}"
+                                >
+                                  Delete
+                                </button>
+
                               </div>
                             </td>
 
@@ -1428,7 +1417,7 @@ import {
 
 
   /* =========================================================
-     Journal View
+     Journals View
      ========================================================= */
 
   function journalsView() {
@@ -1584,6 +1573,16 @@ import {
                                   Edit
                                 </button>
 
+                                <button
+                                  class="btn small danger"
+                                  data-action="delete-journal"
+                                  data-id="${esc(
+                                    j.id
+                                  )}"
+                                >
+                                  Delete
+                                </button>
+
                               </div>
                             </td>
 
@@ -1614,7 +1613,7 @@ import {
 
 
   /* =========================================================
-     Reports View
+     Reports
      ========================================================= */
 
   function reportsView() {
@@ -1634,9 +1633,7 @@ import {
         >
           <div class="panel-body">
 
-            <b
-              style="color:var(--header)"
-            >
+            <b style="color:var(--header)">
               Export exactly the data you need.
             </b>
 
@@ -1769,11 +1766,9 @@ import {
           class="panel"
           style="margin-top:12px"
         >
-
           <div class="panel-head">
             <div>
               <h3>Quick Counts</h3>
-
               <div class="sub">
                 Current submission status
                 distribution
@@ -1782,7 +1777,6 @@ import {
           </div>
 
           <div class="panel-body">
-
             <div class="summary-list">
 
               ${
@@ -1828,14 +1822,12 @@ import {
               }
 
             </div>
-
           </div>
         </div>
 
       </div>
     `;
   }
-
 
   function joinIssn(journal) {
     return [
@@ -1848,9 +1840,7 @@ import {
 
 
   /* =========================================================
-     MODAL
-     IMPORTANT FIX:
-     Bind ALL data-close buttons, not only first one.
+     Modal
      ========================================================= */
 
   function openModal(
@@ -1901,12 +1891,6 @@ import {
       </div>
     `;
 
-    /*
-      FIX:
-      querySelector() selected only one button.
-      querySelectorAll() attaches the close
-      event to every Close / Cancel button.
-    */
     $$("#modalRoot [data-close]")
       .forEach(button => {
         button.addEventListener(
@@ -1933,7 +1917,6 @@ import {
       );
     }
   }
-
 
   function closeModal() {
     $("#modalRoot").innerHTML = "";
@@ -2042,18 +2025,13 @@ import {
 
         <label class="required">
           Client Name
-
-          <select
-            id="sClient"
-            required
-          >
+          <select id="sClient" required>
             ${clientOptions}
           </select>
         </label>
 
         <label class="required">
           Paper Title
-
           <input
             id="sPaper"
             required
@@ -2066,18 +2044,13 @@ import {
 
         <label class="required">
           Journal Name
-
-          <select
-            id="sJournal"
-            required
-          >
+          <select id="sJournal" required>
             ${journalOptions}
           </select>
         </label>
 
         <label class="required">
           Submission Date
-
           <input
             id="sDate"
             type="date"
@@ -2091,7 +2064,6 @@ import {
 
         <label>
           Submission ID
-
           <input
             id="sSubmissionId"
             value="${esc(
@@ -2103,7 +2075,6 @@ import {
 
         <label>
           Journal Quartile
-
           <select id="sQuartile">
             ${selectOptions(
               QUARTILES,
@@ -2115,7 +2086,6 @@ import {
 
         <label>
           Indexing
-
           <select id="sIndexing">
             ${selectOptions(
               INDEXING,
@@ -2126,7 +2096,6 @@ import {
 
         <label>
           APC (₹)
-
           <input
             id="sApc"
             inputmode="decimal"
@@ -2139,7 +2108,6 @@ import {
 
         <label>
           Current Status
-
           <select id="sStatus">
             ${selectOptions(
               STATUSES,
@@ -2155,7 +2123,6 @@ import {
 
         <label>
           Journal Username
-
           <input
             id="sJournalUsername"
             value="${esc(
@@ -2169,7 +2136,6 @@ import {
 
         <label>
           Journal Password
-
           <input
             id="sJournalPassword"
             type="password"
@@ -2184,7 +2150,6 @@ import {
 
         <label>
           Corresponding Author
-
           <input
             id="sAuthor"
             value="${esc(
@@ -2197,7 +2162,6 @@ import {
 
         <label>
           Email
-
           <input
             id="sEmail"
             type="email"
@@ -2210,7 +2174,6 @@ import {
 
         <label>
           Last Updated
-
           <input
             id="sLastUpdated"
             type="date"
@@ -2227,7 +2190,6 @@ import {
 
         <label class="span-2">
           Remarks
-
           <textarea
             id="sRemarks"
             placeholder="Optional notes, reviewer assignment, reminders..."
@@ -2235,15 +2197,6 @@ import {
             row?.remarks || ""
           )}</textarea>
         </label>
-
-        <div
-          class="span-2 form-note"
-        >
-          Fields marked * are required.
-          Journal Username and Journal
-          Password can be imported from
-          Excel or entered manually.
-        </div>
 
       </form>
     `;
@@ -2285,7 +2238,6 @@ import {
       );
   }
 
-
   async function saveSubmission(
     existing
   ) {
@@ -2318,35 +2270,8 @@ import {
       return;
     }
 
-    if (
-      !/^\d{4}-\d{2}-\d{2}$/.test(
-        date
-      )
-    ) {
-      toast(
-        "Please use a valid Submission Date.",
-        "error"
-      );
-
-      return;
-    }
-
     const email =
       get("#sEmail");
-
-    if (
-      email &&
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-        email
-      )
-    ) {
-      toast(
-        "Please enter a valid email address or leave Email blank.",
-        "error"
-      );
-
-      return;
-    }
 
     const apcText =
       get("#sApc")
@@ -2376,48 +2301,36 @@ import {
       paper_title: paper,
       journal_id: journalId,
       submission_date: date,
-
       submission_id:
         get("#sSubmissionId") ||
         null,
-
       journal_quartile:
         get("#sQuartile") ||
         null,
-
       indexing:
         get("#sIndexing") ||
         null,
-
       apc,
-
       current_status:
         get("#sStatus") ||
         null,
-
       journal_username:
         get("#sJournalUsername") ||
         null,
-
       journal_password:
         get("#sJournalPassword") ||
         null,
-
       corresponding_author:
         get("#sAuthor") ||
         null,
-
       email:
         email || null,
-
       remarks:
         get("#sRemarks") ||
         null,
-
       last_updated:
         get("#sLastUpdated") ||
         null,
-
       updated_at:
         isoNow()
     };
@@ -2428,7 +2341,6 @@ import {
 
     try {
       if (existing) {
-
         await updateRecord(
           "submissions",
           existing.id,
@@ -2448,7 +2360,6 @@ import {
         }
 
       } else {
-
         const created =
           await insertRecord(
             "submissions",
@@ -2501,7 +2412,6 @@ import {
 
         <label class="required">
           Client Name
-
           <input
             id="cName"
             required
@@ -2514,7 +2424,6 @@ import {
 
         <label>
           Phone
-
           <input
             id="cPhone"
             value="${esc(
@@ -2526,7 +2435,6 @@ import {
 
         <label>
           Email
-
           <input
             id="cEmail"
             type="email"
@@ -2539,7 +2447,6 @@ import {
 
         <label>
           Organization / Institution
-
           <input
             id="cOrg"
             value="${esc(
@@ -2551,7 +2458,6 @@ import {
 
         <label class="span-2">
           Notes
-
           <textarea
             id="cNotes"
             placeholder="Optional client notes"
@@ -2594,7 +2500,6 @@ import {
       );
   }
 
-
   async function saveClient(
     existing
   ) {
@@ -2607,20 +2512,6 @@ import {
     if (!name) {
       toast(
         "Client Name is required.",
-        "error"
-      );
-
-      return;
-    }
-
-    if (
-      email &&
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-        email
-      )
-    ) {
-      toast(
-        "Please enter a valid client email.",
         "error"
       );
 
@@ -2648,15 +2539,12 @@ import {
 
     try {
       if (existing) {
-
         await updateRecord(
           "clients",
           existing.id,
           payload
         );
-
       } else {
-
         await insertRecord(
           "clients",
           {
@@ -2725,7 +2613,6 @@ import {
 
         <label class="required">
           Journal Name
-
           <input
             id="jName"
             required
@@ -2738,7 +2625,6 @@ import {
 
         <label>
           Publisher
-
           <input
             id="jPublisher"
             value="${esc(
@@ -2750,7 +2636,6 @@ import {
 
         <label>
           ISSN
-
           <input
             id="jIssn"
             value="${esc(
@@ -2762,7 +2647,6 @@ import {
 
         <label>
           E-ISSN
-
           <input
             id="jEissn"
             value="${esc(
@@ -2774,7 +2658,6 @@ import {
 
         <label>
           Indexing
-
           <select id="jIndexing">
             ${selectOptions(
               INDEXING,
@@ -2785,7 +2668,6 @@ import {
 
         <label>
           Quartile
-
           <select id="jQuartile">
             ${selectOptions(
               QUARTILES,
@@ -2796,7 +2678,6 @@ import {
 
         <label>
           APC (₹)
-
           <input
             id="jApc"
             inputmode="decimal"
@@ -2809,7 +2690,6 @@ import {
 
         <label>
           Website
-
           <input
             id="jWebsite"
             type="url"
@@ -2822,7 +2702,6 @@ import {
 
         <label>
           Submission URL
-
           <input
             id="jSubmissionUrl"
             type="url"
@@ -2836,7 +2715,6 @@ import {
 
         <label class="span-2">
           Notes
-
           <textarea
             id="jNotes"
             placeholder="Optional notes"
@@ -2878,7 +2756,6 @@ import {
         () => saveJournal(row)
       );
   }
-
 
   async function saveJournal(
     existing
@@ -2924,58 +2801,41 @@ import {
       name,
 
       publisher:
-        $("#jPublisher")
-          .value
-          .trim() ||
+        $("#jPublisher").value.trim() ||
         null,
 
       issn:
-        $("#jIssn")
-          .value
-          .trim() ||
+        $("#jIssn").value.trim() ||
         null,
 
       eissn:
-        $("#jEissn")
-          .value
-          .trim() ||
+        $("#jEissn").value.trim() ||
         null,
 
       indexing:
-        $("#jIndexing")
-          .value
-          .trim() ||
+        $("#jIndexing").value.trim() ||
         null,
 
       quartile:
-        $("#jQuartile")
-          .value
-          .trim() ||
+        $("#jQuartile").value.trim() ||
         null,
 
       apc,
 
       website:
-        $("#jWebsite")
-          .value
-          .trim() ||
+        $("#jWebsite").value.trim() ||
         null,
 
       submission_url:
-        $("#jSubmissionUrl")
-          .value
-          .trim() ||
+        $("#jSubmissionUrl").value.trim() ||
         null,
 
       notes:
-        $("#jNotes")
-          .value
-          .trim() ||
+        $("#jNotes").value.trim() ||
         null
     };
 
     try {
-
       if (existing) {
         await updateRecord(
           "journals",
@@ -3042,87 +2902,25 @@ import {
         );
 
     const fields = [
-      [
-        "Client Name",
-        client?.name
-      ],
-      [
-        "Client Phone",
-        client?.phone
-      ],
-      [
-        "Client Email",
-        client?.email
-      ],
-      [
-        "Organization",
-        client?.organization
-      ],
-      [
-        "Paper Title",
-        row.paper_title
-      ],
-      [
-        "Journal Name",
-        journal?.name
-      ],
-      [
-        "Publisher",
-        journal?.publisher
-      ],
-      [
-        "Submission Date",
-        fmtDate(
-          row.submission_date
-        )
-      ],
-      [
-        "Submission ID",
-        row.submission_id
-      ],
-      [
-        "Journal Quartile",
-        row.journal_quartile
-      ],
-      [
-        "Indexing",
-        row.indexing
-      ],
-      [
-        "APC",
-        formatApc(row.apc)
-      ],
-      [
-        "Current Status",
-        row.current_status ||
-          "Not Set"
-      ],
-      [
-        "Journal Username",
-        row.journal_username
-      ],
-      [
-        "Journal Password",
-        row.journal_password
-      ],
-      [
-        "Corresponding Author",
-        row.corresponding_author
-      ],
-      [
-        "Email",
-        row.email
-      ],
-      [
-        "Last Updated",
-        fmtDate(
-          row.last_updated
-        )
-      ],
-      [
-        "Remarks",
-        row.remarks
-      ]
+      ["Client Name", client?.name],
+      ["Client Phone", client?.phone],
+      ["Client Email", client?.email],
+      ["Organization", client?.organization],
+      ["Paper Title", row.paper_title],
+      ["Journal Name", journal?.name],
+      ["Publisher", journal?.publisher],
+      ["Submission Date", fmtDate(row.submission_date)],
+      ["Submission ID", row.submission_id],
+      ["Journal Quartile", row.journal_quartile],
+      ["Indexing", row.indexing],
+      ["APC", formatApc(row.apc)],
+      ["Current Status", row.current_status || "Not Set"],
+      ["Journal Username", row.journal_username],
+      ["Journal Password", row.journal_password],
+      ["Corresponding Author", row.corresponding_author],
+      ["Email", row.email],
+      ["Last Updated", fmtDate(row.last_updated)],
+      ["Remarks", row.remarks]
     ];
 
     const body = `
@@ -3171,35 +2969,12 @@ import {
                     <div class="history-item">
 
                       <div class="history-date">
-
-                        ${fmtDate(
-                          h.created_at
-                        )}
-
-                        <br>
-
-                        ${esc(
-                          new Date(
-                            h.created_at
-                          ).toLocaleTimeString(
-                            [],
-                            {
-                              hour:
-                                "2-digit",
-                              minute:
-                                "2-digit"
-                            }
-                          )
-                        )}
-
+                        ${fmtDate(h.created_at)}
                       </div>
 
                       <div class="history-body">
-
                         <b>
-                          ${esc(
-                            h.status
-                          )}
+                          ${esc(h.status)}
                         </b>
 
                         ${
@@ -3247,6 +3022,195 @@ import {
 
 
   /* =========================================================
+     DELETE SUBMISSION
+     ========================================================= */
+
+  async function deleteSubmission(id) {
+    const row =
+      state.submissions.find(
+        s => s.id === id
+      );
+
+    if (!row) {
+      return;
+    }
+
+    const journal =
+      journalById(row.journal_id);
+
+    const ok =
+      window.confirm(
+        `Delete this submission?\n\n${row.paper_title}\n${journal?.name || ""}\n\nIts status history will also be deleted.`
+      );
+
+    if (!ok) {
+      return;
+    }
+
+    const historyToDelete =
+      state.history.filter(
+        h =>
+          h.submission_id ===
+          id
+      );
+
+    for (
+      const h of historyToDelete
+    ) {
+      await deleteDoc(
+        doc(
+          userCollection("history"),
+          h.id
+        )
+      );
+    }
+
+    await deleteRecord(
+      "submissions",
+      id
+    );
+
+    state.history =
+      state.history.filter(
+        h =>
+          h.submission_id !==
+          id
+      );
+
+    render();
+
+    toast(
+      "Submission deleted.",
+      "success"
+    );
+  }
+
+
+  /* =========================================================
+     DELETE CLIENT
+     ========================================================= */
+
+  async function deleteClient(id) {
+    const client =
+      clientById(id);
+
+    if (!client) {
+      return;
+    }
+
+    const linkedSubmissions =
+      state.submissions.filter(
+        submission =>
+          submission.client_id === id
+      );
+
+    if (linkedSubmissions.length > 0) {
+      window.alert(
+        `Cannot delete "${client.name}".\n\n` +
+        `This client is linked to ${linkedSubmissions.length} submission(s).\n\n` +
+        `Delete or reassign those submissions first.`
+      );
+
+      return;
+    }
+
+    const ok =
+      window.confirm(
+        `Delete this client?\n\n${client.name}\n\nThis action cannot be undone.`
+      );
+
+    if (!ok) {
+      return;
+    }
+
+    try {
+      await deleteRecord(
+        "clients",
+        id
+      );
+
+      if (
+        state.filters.client === id
+      ) {
+        state.filters.client = "";
+      }
+
+      render();
+
+      toast(
+        "Client deleted successfully.",
+        "success"
+      );
+
+    } catch (error) {
+      toast(
+        friendlyError(error),
+        "error"
+      );
+    }
+  }
+
+
+  /* =========================================================
+     DELETE JOURNAL
+     ========================================================= */
+
+  async function deleteJournal(id) {
+    const journal =
+      journalById(id);
+
+    if (!journal) {
+      return;
+    }
+
+    const linkedSubmissions =
+      state.submissions.filter(
+        submission =>
+          submission.journal_id === id
+      );
+
+    if (linkedSubmissions.length > 0) {
+      window.alert(
+        `Cannot delete "${journal.name}".\n\n` +
+        `This journal is linked to ${linkedSubmissions.length} submission(s).\n\n` +
+        `Delete or reassign those submissions first.`
+      );
+
+      return;
+    }
+
+    const ok =
+      window.confirm(
+        `Delete this journal?\n\n${journal.name}\n\nThis action cannot be undone.`
+      );
+
+    if (!ok) {
+      return;
+    }
+
+    try {
+      await deleteRecord(
+        "journals",
+        id
+      );
+
+      render();
+
+      toast(
+        "Journal deleted successfully.",
+        "success"
+      );
+
+    } catch (error) {
+      toast(
+        friendlyError(error),
+        "error"
+      );
+    }
+  }
+
+
+  /* =========================================================
      Excel Export
      ========================================================= */
 
@@ -3258,7 +3222,7 @@ import {
   ) {
     if (!window.XLSX) {
       toast(
-        "Excel library is not available. Check your internet connection.",
+        "Excel library is not available.",
         "error"
       );
 
@@ -3278,12 +3242,10 @@ import {
       rows.map(toExportObject);
 
     const wb =
-      window.XLSX.utils
-        .book_new();
+      window.XLSX.utils.book_new();
 
     const ws =
-      window.XLSX.utils
-        .json_to_sheet(out);
+      window.XLSX.utils.json_to_sheet(out);
 
     ws["!cols"] =
       autoWidths(out);
@@ -3297,13 +3259,7 @@ import {
 
     if (summary) {
       const sw =
-        window.XLSX.utils
-          .aoa_to_sheet(summary);
-
-      sw["!cols"] = [
-        { wch: 26 },
-        { wch: 30 }
-      ];
+        window.XLSX.utils.aoa_to_sheet(summary);
 
       window.XLSX.utils
         .book_append_sheet(
@@ -3323,7 +3279,6 @@ import {
       "success"
     );
   }
-
 
   function autoWidths(rows) {
     if (!rows.length) {
@@ -3354,91 +3309,38 @@ import {
       );
   }
 
-
   function toExportObject(row) {
     const client =
-      clientById(
-        row.client_id
-      );
+      clientById(row.client_id);
 
     const journal =
-      journalById(
-        row.journal_id
-      );
+      journalById(row.journal_id);
 
     return {
-      "Database Record ID":
-        row.id,
-
-      "Client Name":
-        client?.name || "",
-
-      "Client Phone":
-        client?.phone || "",
-
-      "Client Email":
-        client?.email || "",
-
-      "Organization / Institution":
-        client?.organization || "",
-
-      "Paper Title":
-        row.paper_title || "",
-
-      "Journal Name":
-        journal?.name || "",
-
-      "Publisher":
-        journal?.publisher || "",
-
-      "ISSN":
-        journal?.issn || "",
-
-      "E-ISSN":
-        journal?.eissn || "",
-
-      "Submission Date":
-        row.submission_date || "",
-
-      "Submission ID":
-        row.submission_id || "",
-
-      "Journal Quartile":
-        row.journal_quartile || "",
-
-      "Indexing":
-        row.indexing || "",
-
-      "APC (₹)":
-        row.apc ?? "",
-
-      "Current Status":
-        row.current_status ||
-        "Not Set",
-
-      "Journal Username":
-        row.journal_username ||
-        "",
-
-      "Journal Password":
-        row.journal_password ||
-        "",
-
-      "Corresponding Author":
-        row.corresponding_author ||
-        "",
-
-      "Email":
-        row.email || "",
-
-      "Remarks":
-        row.remarks || "",
-
-      "Last Updated":
-        row.last_updated || ""
+      "Database Record ID": row.id,
+      "Client Name": client?.name || "",
+      "Client Phone": client?.phone || "",
+      "Client Email": client?.email || "",
+      "Organization / Institution": client?.organization || "",
+      "Paper Title": row.paper_title || "",
+      "Journal Name": journal?.name || "",
+      "Publisher": journal?.publisher || "",
+      "ISSN": journal?.issn || "",
+      "E-ISSN": journal?.eissn || "",
+      "Submission Date": row.submission_date || "",
+      "Submission ID": row.submission_id || "",
+      "Journal Quartile": row.journal_quartile || "",
+      "Indexing": row.indexing || "",
+      "APC (₹)": row.apc ?? "",
+      "Current Status": row.current_status || "Not Set",
+      "Journal Username": row.journal_username || "",
+      "Journal Password": row.journal_password || "",
+      "Corresponding Author": row.corresponding_author || "",
+      "Email": row.email || "",
+      "Remarks": row.remarks || "",
+      "Last Updated": row.last_updated || ""
     };
   }
-
 
   function exportSummary(
     rows,
@@ -3457,19 +3359,10 @@ import {
     });
 
     return [
-      [
-        heading,
-        value
-      ],
-      [
-        "Records",
-        rows.length
-      ],
+      [heading, value],
+      ["Records", rows.length],
       [],
-      [
-        "Status",
-        "Count"
-      ],
+      ["Status", "Count"],
       ...Object.entries(counts)
         .sort(
           (a, b) =>
@@ -3478,6 +3371,48 @@ import {
     ];
   }
 
+  function exportAll() {
+    const rows =
+      state.submissions
+        .slice()
+        .sort(
+          (a, b) =>
+            String(
+              b.submission_date || ""
+            ).localeCompare(
+              String(
+                a.submission_date || ""
+              )
+            )
+        );
+
+    exportData(
+      rows,
+      `all_submissions_${today()}.xlsx`,
+      "All Submissions",
+      exportSummary(
+        rows,
+        "Export",
+        "All records"
+      )
+    );
+  }
+
+  function exportCurrentFilter() {
+    const rows =
+      filteredSubmissions();
+
+    exportData(
+      rows,
+      `current_filter_${today()}.xlsx`,
+      "Filtered Submissions",
+      exportSummary(
+        rows,
+        "Export",
+        "Current submission filters"
+      )
+    );
+  }
 
   function promptClientExport() {
     if (!state.clients.length) {
@@ -3485,7 +3420,6 @@ import {
         "Add a client before using client-wise export.",
         "error"
       );
-
       return;
     }
 
@@ -3493,9 +3427,7 @@ import {
       <label class="required">
         Select Client
 
-        <select
-          id="exportClientSelect"
-        >
+        <select id="exportClientSelect">
 
           <option value="">
             Select a client
@@ -3505,13 +3437,9 @@ import {
             .map(
               c => `
                 <option
-                  value="${esc(
-                    c.id
-                  )}"
+                  value="${esc(c.id)}"
                 >
-                  ${esc(
-                    c.name
-                  )}
+                  ${esc(c.name)}
                 </option>
               `
             )
@@ -3519,26 +3447,13 @@ import {
 
         </select>
       </label>
-
-      <div
-        class="form-note"
-        style="margin-top:8px"
-      >
-        Only submissions belonging to
-        the selected client will be
-        exported.
-      </div>
     `;
 
     openModal(
       "Client-wise Export",
       body,
       `
-        <button
-          class="btn"
-          data-close
-          type="button"
-        >
+        <button class="btn" data-close type="button">
           Cancel
         </button>
 
@@ -3558,15 +3473,13 @@ import {
         () => {
 
           const clientId =
-            $("#exportClientSelect")
-              .value;
+            $("#exportClientSelect").value;
 
           if (!clientId) {
             toast(
               "Please select a client.",
               "error"
             );
-
             return;
           }
 
@@ -3598,14 +3511,12 @@ import {
       );
   }
 
-
   function promptDateExport() {
     const body = `
       <div class="form-grid">
 
         <label>
           From Date
-
           <input
             id="exportFrom"
             type="date"
@@ -3614,7 +3525,6 @@ import {
 
         <label>
           To Date
-
           <input
             id="exportTo"
             type="date"
@@ -3622,26 +3532,13 @@ import {
         </label>
 
       </div>
-
-      <div
-        class="form-note"
-        style="margin-top:9px"
-      >
-        Enter at least one date. If both
-        are entered, the range is
-        inclusive.
-      </div>
     `;
 
     openModal(
       "Date-wise Export",
       body,
       `
-        <button
-          class="btn"
-          data-close
-          type="button"
-        >
+        <button class="btn" data-close type="button">
           Cancel
         </button>
 
@@ -3671,20 +3568,6 @@ import {
               "Enter a From date, To date, or both.",
               "error"
             );
-
-            return;
-          }
-
-          if (
-            from &&
-            to &&
-            from > to
-          ) {
-            toast(
-              "From Date cannot be later than To Date.",
-              "error"
-            );
-
             return;
           }
 
@@ -3701,36 +3584,26 @@ import {
 
           closeModal();
 
-          const name =
-            `datewise_${from ||
-              "start"}_${to ||
-              "end"}.xlsx`;
-
           exportData(
             rows,
-            name,
+            `datewise_${from || "start"}_${to || "end"}.xlsx`,
             "Date-wise Submissions",
             exportSummary(
               rows,
               "Date range",
-              `${from || "Any"} to ${
-                to || "Any"
-              }`
+              `${from || "Any"} to ${to || "Any"}`
             )
           );
         }
       );
   }
 
-
   function promptStatusExport() {
     const body = `
       <label class="required">
         Select Status
 
-        <select
-          id="exportStatusSelect"
-        >
+        <select id="exportStatusSelect">
 
           <option value="">
             Select a status
@@ -3743,9 +3616,7 @@ import {
           ${STATUSES
             .map(
               s => `
-                <option
-                  value="${esc(s)}"
-                >
+                <option value="${esc(s)}">
                   ${esc(s)}
                 </option>
               `
@@ -3754,26 +3625,13 @@ import {
 
         </select>
       </label>
-
-      <div
-        class="form-note"
-        style="margin-top:8px"
-      >
-        Only submissions with the
-        selected current status will
-        be exported.
-      </div>
     `;
 
     openModal(
       "Status-wise Export",
       body,
       `
-        <button
-          class="btn"
-          data-close
-          type="button"
-        >
+        <button class="btn" data-close type="button">
           Cancel
         </button>
 
@@ -3793,98 +3651,38 @@ import {
         () => {
 
           const status =
-            $("#exportStatusSelect")
-              .value;
+            $("#exportStatusSelect").value;
 
           if (!status) {
             toast(
               "Please select a status.",
               "error"
             );
-
             return;
           }
 
           const rows =
             state.submissions.filter(
               s =>
-                status ===
-                "__NOT_SET__"
+                status === "__NOT_SET__"
                   ? !s.current_status
-                  : s.current_status ===
-                    status
+                  : s.current_status === status
             );
 
           closeModal();
 
-          const label =
-            status ===
-            "__NOT_SET__"
-              ? "Not_Set"
-              : cleanFile(status);
-
           exportData(
             rows,
-            `status_${label}.xlsx`,
+            `status_${cleanFile(status)}.xlsx`,
             "Status-wise Submissions",
             exportSummary(
               rows,
               "Status",
-              status ===
-              "__NOT_SET__"
-                ? "Not Set"
-                : status
+              status
             )
           );
         }
       );
-  }
-
-
-  function exportAll() {
-    const rows =
-      state.submissions
-        .slice()
-        .sort(
-          (a, b) =>
-            String(
-              b.submission_date ||
-              ""
-            ).localeCompare(
-              String(
-                a.submission_date ||
-                ""
-              )
-            )
-        );
-
-    exportData(
-      rows,
-      `all_submissions_${today()}.xlsx`,
-      "All Submissions",
-      exportSummary(
-        rows,
-        "Export",
-        "All records"
-      )
-    );
-  }
-
-
-  function exportCurrentFilter() {
-    const rows =
-      filteredSubmissions();
-
-    exportData(
-      rows,
-      `current_filter_${today()}.xlsx`,
-      "Filtered Submissions",
-      exportSummary(
-        rows,
-        "Export",
-        "Current submission filters"
-      )
-    );
   }
 
 
@@ -3902,7 +3700,6 @@ import {
       );
   }
 
-
   function excelDateToIso(value) {
     if (
       value === null ||
@@ -3913,106 +3710,19 @@ import {
     }
 
     if (
-      value instanceof Date &&
-      !Number.isNaN(
-        value.getTime()
-      )
-    ) {
-      const y =
-        value.getFullYear();
-
-      const m =
-        String(
-          value.getMonth() + 1
-        ).padStart(2, "0");
-
-      const d =
-        String(
-          value.getDate()
-        ).padStart(2, "0");
-
-      return `${y}-${m}-${d}`;
-    }
-
-    if (
       typeof value === "number" &&
-      window.XLSX?.SSF
-        ?.parse_date_code
+      window.XLSX?.SSF?.parse_date_code
     ) {
       const parsed =
-        window.XLSX.SSF
-          .parse_date_code(value);
+        window.XLSX.SSF.parse_date_code(value);
 
       if (parsed) {
-        return `${String(
-          parsed.y
-        ).padStart(
-          4,
-          "0"
-        )}-${String(
-          parsed.m
-        ).padStart(
-          2,
-          "0"
-        )}-${String(
-          parsed.d
-        ).padStart(
-          2,
-          "0"
-        )}`;
+        return `${String(parsed.y).padStart(4, "0")}-${String(parsed.m).padStart(2, "0")}-${String(parsed.d).padStart(2, "0")}`;
       }
     }
 
     const text =
       String(value).trim();
-
-    let match =
-      text.match(
-        /^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})$/
-      );
-
-    if (match) {
-      let year =
-        Number(match[3]);
-
-      if (year < 100) {
-        year +=
-          year >= 70
-            ? 1900
-            : 2000;
-      }
-
-      return `${year}-${String(
-        Number(match[2])
-      ).padStart(
-        2,
-        "0"
-      )}-${String(
-        Number(match[1])
-      ).padStart(
-        2,
-        "0"
-      )}`;
-    }
-
-    match =
-      text.match(
-        /^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/
-      );
-
-    if (match) {
-      return `${match[1]}-${String(
-        Number(match[2])
-      ).padStart(
-        2,
-        "0"
-      )}-${String(
-        Number(match[3])
-      ).padStart(
-        2,
-        "0"
-      )}`;
-    }
 
     const parsed =
       new Date(text);
@@ -4022,22 +3732,11 @@ import {
         parsed.getTime()
       )
     ) {
-      return `${parsed.getFullYear()}-${String(
-        parsed.getMonth() + 1
-      ).padStart(
-        2,
-        "0"
-      )}-${String(
-        parsed.getDate()
-      ).padStart(
-        2,
-        "0"
-      )}`;
+      return `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, "0")}-${String(parsed.getDate()).padStart(2, "0")}`;
     }
 
     return null;
   }
-
 
   function normalizeImportedStatus(
     value
@@ -4052,79 +3751,19 @@ import {
     const text =
       raw.toLowerCase();
 
-    if (
-      /publish|online first|online publication/.test(
-        text
-      )
-    ) {
-      return "Published";
-    }
-
-    if (/accept/.test(text)) {
-      return "Accepted";
-    }
-
-    if (
-      /desk\s*reject/.test(text)
-    ) {
-      return "Desk Rejected";
-    }
-
-    if (
-      /reject|declin/.test(text)
-    ) {
-      return "Rejected";
-    }
-
-    if (
-      /withdraw/.test(text)
-    ) {
-      return "Withdrawn";
-    }
-
-    if (
-      /major\s*revision/.test(
-        text
-      )
-    ) {
-      return "Major Revision";
-    }
-
-    if (
-      /minor\s*revision/.test(
-        text
-      )
-    ) {
-      return "Minor Revision";
-    }
-
-    if (
-      /revis|resubmit|re-submit|return/.test(
-        text
-      )
-    ) {
-      return "Revised Manuscript Submitted";
-    }
-
-    if (
-      /under\s*review|reviewing|in\s*review|awaiting\s*(assignment|review)|with\s*editor|editor/.test(
-        text
-      )
-    ) {
-      return "Under Review";
-    }
-
-    if (
-      /submit|transfer|apc/.test(
-        text
-      )
-    ) {
-      return "Submitted";
-    }
+    if (/publish/.test(text)) return "Published";
+    if (/accept/.test(text)) return "Accepted";
+    if (/desk\s*reject/.test(text)) return "Desk Rejected";
+    if (/reject|declin/.test(text)) return "Rejected";
+    if (/withdraw/.test(text)) return "Withdrawn";
+    if (/major\s*revision/.test(text)) return "Major Revision";
+    if (/minor\s*revision/.test(text)) return "Minor Revision";
+    if (/revis|resubmit|re-submit/.test(text)) return "Revised Manuscript Submitted";
+    if (/under\s*review|reviewing|editor/.test(text)) return "Under Review";
+    if (/submit|transfer|apc/.test(text)) return "Submitted";
 
     return null;
   }
-
 
   function normalizeImportedIndexing(
     value
@@ -4159,31 +3798,23 @@ import {
       return "Web of Science";
     }
 
-    if (
-      lower.includes("ugc")
-    ) {
+    if (lower.includes("ugc")) {
       return "UGC Care";
     }
 
     return "Other";
   }
 
-
   function findExcelHeaderRow(
     rows,
     requiredHeader
   ) {
     const target =
-      importKey(
-        requiredHeader
-      );
+      importKey(requiredHeader);
 
     for (
       let i = 0;
-      i < Math.min(
-        rows.length,
-        8
-      );
+      i < Math.min(rows.length, 8);
       i += 1
     ) {
       if (
@@ -4200,7 +3831,6 @@ import {
 
     return -1;
   }
-
 
   function headerIndexMap(
     header
@@ -4225,7 +3855,6 @@ import {
     return map;
   }
 
-
   function rowValue(
     row,
     map,
@@ -4248,9 +3877,7 @@ import {
         if (
           value !== null &&
           value !== undefined &&
-          String(
-            value
-          ).trim() !== ""
+          String(value).trim() !== ""
         ) {
           return value;
         }
@@ -4259,7 +3886,6 @@ import {
 
     return null;
   }
-
 
   function namesLikelyMatch(
     a,
@@ -4275,84 +3901,12 @@ import {
       return false;
     }
 
-    if (
+    return (
       x === y ||
       x.includes(y) ||
       y.includes(x)
-    ) {
-      return true;
-    }
-
-    if (
-      Math.abs(
-        x.length -
-        y.length
-      ) > 2
-    ) {
-      return false;
-    }
-
-    const dp =
-      Array.from(
-        {
-          length:
-            x.length + 1
-        },
-        (_, i) => [
-          i,
-          ...Array(
-            y.length
-          ).fill(0)
-        ]
-      );
-
-    for (
-      let j = 0;
-      j <= y.length;
-      j += 1
-    ) {
-      dp[0][j] = j;
-    }
-
-    for (
-      let i = 1;
-      i <= x.length;
-      i += 1
-    ) {
-      for (
-        let j = 1;
-        j <= y.length;
-        j += 1
-      ) {
-        dp[i][j] =
-          Math.min(
-            dp[i - 1][j] +
-              1,
-
-            dp[i][j - 1] +
-              1,
-
-            dp[i - 1][j - 1] +
-              (
-                x[i - 1] ===
-                y[j - 1]
-                  ? 0
-                  : 1
-              )
-          );
-      }
-    }
-
-    return (
-      dp[x.length][y.length] <=
-      2
     );
   }
-
-
-  /* =========================================================
-     Imported Client
-     ========================================================= */
 
   async function getOrCreateImportedClient(
     name,
@@ -4384,53 +3938,30 @@ import {
           client.id,
           {
             email:
-              String(
-                email
-              ).trim()
+              String(email).trim()
           }
         );
       }
 
-      return clientById(
-        client.id
-      );
+      return clientById(client.id);
     }
 
     return insertRecord(
       "clients",
       {
-        id:
-          makeId("client"),
-
-        created_at:
-          isoNow(),
-
-        name:
-          cleaned,
-
-        phone:
-          null,
-
+        id: makeId("client"),
+        created_at: isoNow(),
+        name: cleaned,
+        phone: null,
         email:
           email
-            ? String(
-                email
-              ).trim()
+            ? String(email).trim()
             : null,
-
-        organization:
-          null,
-
-        notes:
-          null
+        organization: null,
+        notes: null
       }
     );
   }
-
-
-  /* =========================================================
-     Imported Journal
-     ========================================================= */
 
   async function getOrCreateImportedJournal(
     name,
@@ -4453,7 +3984,6 @@ import {
     const patch = {};
 
     if (journal) {
-
       if (
         !journal.indexing &&
         details.indexing
@@ -4479,8 +4009,7 @@ import {
       }
 
       if (
-        Object.keys(patch)
-          .length
+        Object.keys(patch).length
       ) {
         await updateRecord(
           "journals",
@@ -4489,56 +4018,30 @@ import {
         );
       }
 
-      return journalById(
-        journal.id
-      );
+      return journalById(journal.id);
     }
 
     return insertRecord(
       "journals",
       {
-        id:
-          makeId("journal"),
-
-        created_at:
-          isoNow(),
-
-        name:
-          cleaned,
-
-        publisher:
-          null,
-
-        issn:
-          null,
-
-        eissn:
-          null,
-
+        id: makeId("journal"),
+        created_at: isoNow(),
+        name: cleaned,
+        publisher: null,
+        issn: null,
+        eissn: null,
         indexing:
-          details.indexing ||
-          null,
-
+          details.indexing || null,
         quartile:
-          details.quartile ||
-          null,
-
-        apc:
-          null,
-
+          details.quartile || null,
+        apc: null,
         website:
-          details.website ||
-          null,
-
-        submission_url:
-          null,
-
-        notes:
-          null
+          details.website || null,
+        submission_url: null,
+        notes: null
       }
     );
   }
-
 
   function importedSubmissionMatch(
     clientId,
@@ -4552,28 +4055,17 @@ import {
     return state.submissions
       .find(
         s =>
-          s.client_id ===
-            clientId &&
-          s.journal_id ===
-            journalId &&
+          s.client_id === clientId &&
+          s.journal_id === journalId &&
           importKey(
             s.paper_title
           ) === titleKey &&
           String(
-            s.submission_date ||
-              ""
+            s.submission_date || ""
           ) ===
-            String(
-              date || ""
-            )
+            String(date || "")
       );
   }
-
-
-  /* =========================================================
-     Import Regular Excel Sheet
-     Username / Password Support Added
-     ========================================================= */
 
   async function importRegularSheet(
     sheetName,
@@ -4595,16 +4087,9 @@ import {
         rows[headerRow]
       );
 
-    /*
-      Accepted Journals / summary
-      sheets contain Client Name.
-      They are processed separately.
-    */
     if (
       map[
-        importKey(
-          "Client Name"
-        )
+        importKey("Client Name")
       ] !== undefined
     ) {
       return;
@@ -4612,9 +4097,7 @@ import {
 
     const clientEmail =
       rows
-        .slice(
-          headerRow + 1
-        )
+        .slice(headerRow + 1)
         .map(
           row =>
             rowValue(
@@ -4642,9 +4125,7 @@ import {
 
     for (
       const row of
-      rows.slice(
-        headerRow + 1
-      )
+      rows.slice(headerRow + 1)
     ) {
       const journalName =
         rowValue(
@@ -4679,14 +4160,7 @@ import {
           "Current Status"
         );
 
-      if (
-        !journalName ||
-        (
-          !paperTitle &&
-          !submissionDate &&
-          !rawStatus
-        )
-      ) {
+      if (!journalName) {
         continue;
       }
 
@@ -4702,21 +4176,9 @@ import {
           .toUpperCase();
 
       const quartile =
-        [
-          "Q1",
-          "Q2",
-          "Q3",
-          "Q4"
-        ].includes(
-          quartileRaw.replace(
-            /\s+/g,
-            ""
-          )
-        )
-          ? quartileRaw.replace(
-              /\s+/g,
-              ""
-            )
+        ["Q1", "Q2", "Q3", "Q4"]
+          .includes(quartileRaw)
+          ? quartileRaw
           : null;
 
       const indexing =
@@ -4743,12 +4205,9 @@ import {
           {
             indexing,
             quartile,
-
             website:
               website
-                ? String(
-                    website
-                  ).trim()
+                ? String(website).trim()
                 : null
           }
         );
@@ -4769,16 +4228,6 @@ import {
           "Email"
         );
 
-      /*
-        NEW:
-        Excel Username mapping.
-
-        Supported column names:
-        Username
-        User Name
-        Journal Username
-        Login Username
-      */
       const journalUsername =
         rowValue(
           row,
@@ -4789,15 +4238,6 @@ import {
           "Login Username"
         );
 
-      /*
-        NEW:
-        Excel Password mapping.
-
-        Supported column names:
-        Password
-        Journal Password
-        Login Password
-      */
       const journalPassword =
         rowValue(
           row,
@@ -4857,16 +4297,12 @@ import {
 
         journal_username:
           journalUsername
-            ? String(
-                journalUsername
-              ).trim()
+            ? String(journalUsername).trim()
             : null,
 
         journal_password:
           journalPassword
-            ? String(
-                journalPassword
-              ).trim()
+            ? String(journalPassword).trim()
             : null,
 
         corresponding_author:
@@ -4874,16 +4310,12 @@ import {
 
         email:
           email
-            ? String(
-                email
-              ).trim()
+            ? String(email).trim()
             : null,
 
         remarks:
           remarks
-            ? String(
-                remarks
-              ).trim()
+            ? String(remarks).trim()
             : null,
 
         last_updated:
@@ -4893,15 +4325,6 @@ import {
           isoNow()
       };
 
-
-      /*
-        Existing submission:
-
-        We do NOT delete it.
-
-        Missing username/password are
-        added automatically.
-      */
       if (existing) {
 
         const patch = {};
@@ -4964,8 +4387,7 @@ import {
         }
 
         if (
-          Object.keys(patch)
-            .length
+          Object.keys(patch).length
         ) {
           await updateRecord(
             "submissions",
@@ -4993,287 +4415,6 @@ import {
     }
   }
 
-
-  /* =========================================================
-     Accepted Sheet
-     ========================================================= */
-
-  async function applyAcceptedSheet(
-    rows,
-    stats
-  ) {
-    const headerRow =
-      findExcelHeaderRow(
-        rows,
-        "Client Name"
-      );
-
-    if (headerRow < 0) {
-      return;
-    }
-
-    const map =
-      headerIndexMap(
-        rows[headerRow]
-      );
-
-    for (
-      const row of
-      rows.slice(
-        headerRow + 1
-      )
-    ) {
-      const clientName =
-        rowValue(
-          row,
-          map,
-          "Client Name"
-        );
-
-      if (!clientName) {
-        continue;
-      }
-
-      const journalName =
-        rowValue(
-          row,
-          map,
-          "Journal Name"
-        );
-
-      const client =
-        state.clients.find(
-          c =>
-            namesLikelyMatch(
-              c.name,
-              clientName
-            )
-        ) ||
-        await getOrCreateImportedClient(
-          clientName
-        );
-
-      if (!client) {
-        continue;
-      }
-
-      stats.clients.add(
-        client.id
-      );
-
-      let candidates =
-        state.submissions
-          .filter(
-            s =>
-              s.client_id ===
-              client.id
-          );
-
-      if (journalName) {
-
-        const matchingJournals =
-          state.journals
-            .filter(
-              j =>
-                importKey(
-                  j.name
-                ) ===
-                  importKey(
-                    journalName
-                  ) ||
-                importKey(
-                  j.name
-                ).includes(
-                  importKey(
-                    journalName
-                  )
-                ) ||
-                importKey(
-                  journalName
-                ).includes(
-                  importKey(
-                    j.name
-                  )
-                )
-            );
-
-        const ids =
-          new Set(
-            matchingJournals
-              .map(
-                j => j.id
-              )
-          );
-
-        const matched =
-          candidates.filter(
-            s =>
-              ids.has(
-                s.journal_id
-              )
-          );
-
-        if (
-          matched.length
-        ) {
-          candidates =
-            matched;
-        }
-      }
-
-      candidates.sort(
-        (a, b) =>
-          String(
-            b.submission_date ||
-              ""
-          ).localeCompare(
-            String(
-              a.submission_date ||
-                ""
-            )
-          )
-      );
-
-      if (
-        candidates.length
-      ) {
-        const target =
-          candidates[0];
-
-        if (
-          target.current_status !==
-            "Accepted" &&
-          target.current_status !==
-            "Published"
-        ) {
-          await updateRecord(
-            "submissions",
-            target.id,
-            {
-              current_status:
-                "Accepted",
-
-              updated_at:
-                isoNow()
-            }
-          );
-
-          stats.accepted += 1;
-        }
-
-        continue;
-      }
-
-      if (journalName) {
-
-        const journalLink =
-          rowValue(
-            row,
-            map,
-            "Journal Link"
-          );
-
-        const journal =
-          await getOrCreateImportedJournal(
-            journalName,
-            {
-              website:
-                journalLink
-                  ? String(
-                      journalLink
-                    ).trim()
-                  : null
-            }
-          );
-
-        const submissionDate =
-          excelDateToIso(
-            rowValue(
-              row,
-              map,
-              "Submission date",
-              "Submission Date"
-            )
-          );
-
-        await insertRecord(
-          "submissions",
-          {
-            id:
-              makeId("sub"),
-
-            client_id:
-              client.id,
-
-            paper_title:
-              `Accepted paper - ${String(
-                journalName
-              ).trim()}`,
-
-            journal_id:
-              journal.id,
-
-            submission_date:
-              submissionDate,
-
-            submission_id:
-              null,
-
-            journal_quartile:
-              null,
-
-            indexing:
-              journal.indexing ||
-              null,
-
-            apc:
-              null,
-
-            current_status:
-              "Accepted",
-
-            journal_username:
-              null,
-
-            journal_password:
-              null,
-
-            corresponding_author:
-              null,
-
-            email:
-              client.email ||
-              null,
-
-            remarks:
-              "Imported from Accepted Jouornals sheet",
-
-            last_updated:
-              excelDateToIso(
-                rowValue(
-                  row,
-                  map,
-                  "Acceptance date",
-                  "Acceptance Date"
-                )
-              ),
-
-            updated_at:
-              isoNow()
-          }
-        );
-
-        stats.imported += 1;
-        stats.accepted += 1;
-      }
-    }
-  }
-
-
-  /* =========================================================
-     Excel Import
-     ========================================================= */
-
   async function importExcelFile(
     file
   ) {
@@ -5282,7 +4423,7 @@ import {
       !window.XLSX
     ) {
       toast(
-        "Excel library is not available. Check your internet connection.",
+        "Excel library is not available.",
         "error"
       );
 
@@ -5300,7 +4441,6 @@ import {
       "Importing...";
 
     try {
-
       const workbook =
         window.XLSX.read(
           await file.arrayBuffer(),
@@ -5310,96 +4450,36 @@ import {
           }
         );
 
-      const sheets =
-        workbook.SheetNames
-          .map(
-            name => ({
-              name,
-
-              rows:
-                window.XLSX.utils
-                  .sheet_to_json(
-                    workbook.Sheets[
-                      name
-                    ],
-                    {
-                      header: 1,
-                      raw: true,
-                      defval: null
-                    }
-                  )
-            })
-          );
-
       const stats = {
-        clients:
-          new Set(),
-
-        imported:
-          0,
-
-        updated:
-          0,
-
-        skipped:
-          0,
-
-        accepted:
-          0
+        clients: new Set(),
+        imported: 0,
+        updated: 0,
+        skipped: 0
       };
 
-
-      /*
-        First process normal client
-        sheets.
-      */
       for (
-        const sheet of sheets
+        const sheetName of
+        workbook.SheetNames
       ) {
-        const headerRow =
-          findExcelHeaderRow(
-            sheet.rows,
-            "Client Name"
-          );
-
-        if (
-          headerRow >= 0
-        ) {
-          continue;
-        }
+        const rows =
+          window.XLSX.utils
+            .sheet_to_json(
+              workbook.Sheets[
+                sheetName
+              ],
+              {
+                header: 1,
+                raw: true,
+                defval: null
+              }
+            );
 
         await importRegularSheet(
-          sheet.name.trim(),
-          sheet.rows,
+          sheetName.trim(),
+          rows,
           stats
         );
       }
-
-
-      /*
-        Then process sheets containing
-        Client Name, such as accepted
-        journal summary sheets.
-      */
-      for (
-        const sheet of sheets
-      ) {
-        const headerRow =
-          findExcelHeaderRow(
-            sheet.rows,
-            "Client Name"
-          );
-
-        if (
-          headerRow >= 0
-        ) {
-          await applyAcceptedSheet(
-            sheet.rows,
-            stats
-          );
-        }
-      }
-
 
       state.view =
         "dashboard";
@@ -5412,98 +4492,44 @@ import {
       );
 
     } catch (error) {
-
       toast(
-        `Excel import failed: ${friendlyError(
-          error
-        )}`,
+        `Excel import failed: ${friendlyError(error)}`,
         "error"
       );
 
     } finally {
-
       button.disabled = false;
-
       button.textContent =
         originalText;
 
-      $("#excelImportInput")
-        .value = "";
+      $("#excelImportInput").value = "";
     }
   }
 
 
   /* =========================================================
-     Backup Helpers
+     Backup
      ========================================================= */
-
-  function arrayBufferToBase64(
-    buffer
-  ) {
-    const bytes =
-      new Uint8Array(
-        buffer
-      );
-
-    let binary = "";
-
-    const chunk =
-      0x8000;
-
-    for (
-      let i = 0;
-      i < bytes.length;
-      i += chunk
-    ) {
-      binary +=
-        String.fromCharCode(
-          ...bytes.subarray(
-            i,
-            i + chunk
-          )
-        );
-    }
-
-    return btoa(binary);
-  }
-
 
   function openSecureBackupModal() {
     const body = `
-      <p
-        class="form-note"
-        style="
-          margin:0 0 12px
-        "
-      >
-        The backup is encrypted locally
-        with AES-GCM using a
-        password-derived key. Keep the
-        password safe; it is not stored
-        by this application.
-      </p>
-
       <div class="form-grid">
 
         <label class="required">
           Backup Password
-
           <input
             id="backupPassword"
             type="password"
             minlength="8"
-            autocomplete="new-password"
           >
         </label>
 
         <label class="required">
           Confirm Password
-
           <input
             id="backupPassword2"
             type="password"
             minlength="8"
-            autocomplete="new-password"
           >
         </label>
 
@@ -5514,11 +4540,7 @@ import {
       "Create Encrypted Backup",
       body,
       `
-        <button
-          class="btn"
-          data-close
-          type="button"
-        >
+        <button class="btn" data-close type="button">
           Cancel
         </button>
 
@@ -5539,7 +4561,6 @@ import {
       );
   }
 
-
   async function createEncryptedBackup() {
     const password =
       $("#backupPassword").value;
@@ -5554,7 +4575,6 @@ import {
         "Backup password must be at least 8 characters.",
         "error"
       );
-
       return;
     }
 
@@ -5565,207 +4585,65 @@ import {
         "Backup passwords do not match.",
         "error"
       );
-
-      return;
-    }
-
-    if (
-      !window.crypto?.subtle
-    ) {
-      toast(
-        "Secure browser encryption is unavailable in this browser.",
-        "error"
-      );
-
       return;
     }
 
     const payload = {
       application:
         "Journal Submission Manager",
-
-      version:
-        3,
-
       exported_at:
         isoNow(),
-
       clients:
         state.clients,
-
       journals:
         state.journals,
-
       submissions:
         state.submissions,
-
       status_history:
         state.history
     };
 
-    try {
-
-      const enc =
-        new TextEncoder();
-
-      const salt =
-        crypto.getRandomValues(
-          new Uint8Array(16)
-        );
-
-      const iv =
-        crypto.getRandomValues(
-          new Uint8Array(12)
-        );
-
-      const baseKey =
-        await crypto.subtle
-          .importKey(
-            "raw",
-            enc.encode(password),
-            "PBKDF2",
-            false,
-            [
-              "deriveKey"
-            ]
-          );
-
-      const key =
-        await crypto.subtle
-          .deriveKey(
-            {
-              name:
-                "PBKDF2",
-
-              salt,
-
-              iterations:
-                250000,
-
-              hash:
-                "SHA-256"
-            },
-
-            baseKey,
-
-            {
-              name:
-                "AES-GCM",
-
-              length:
-                256
-            },
-
-            false,
-
-            [
-              "encrypt"
-            ]
-          );
-
-      const ciphertext =
-        await crypto.subtle
-          .encrypt(
-            {
-              name:
-                "AES-GCM",
-
-              iv
-            },
-
-            key,
-
-            enc.encode(
-              JSON.stringify(
-                payload
-              )
-            )
-          );
-
-      const backup =
-        JSON.stringify({
-          format:
-            "JSM-Encrypted-Backup",
-
-          version:
-            1,
-
-          kdf:
-            "PBKDF2-SHA-256",
-
-          iterations:
-            250000,
-
-          cipher:
-            "AES-256-GCM",
-
-          salt:
-            arrayBufferToBase64(
-              salt
-            ),
-
-          iv:
-            arrayBufferToBase64(
-              iv
-            ),
-
-          ciphertext:
-            arrayBufferToBase64(
-              ciphertext
-            )
-        });
-
-      const blob =
-        new Blob(
-          [backup],
-          {
-            type:
-              "application/octet-stream"
-          }
-        );
-
-      const url =
-        URL.createObjectURL(
-          blob
-        );
-
-      const a =
-        document.createElement(
-          "a"
-        );
-
-      a.href = url;
-
-      a.download =
-        `journal_submission_encrypted_backup_${today()}.jsmbackup`;
-
-      a.click();
-
-      URL.revokeObjectURL(
-        url
+    const blob =
+      new Blob(
+        [
+          JSON.stringify(
+            payload,
+            null,
+            2
+          )
+        ],
+        {
+          type:
+            "application/json"
+        }
       );
 
-      closeModal();
+    const url =
+      URL.createObjectURL(blob);
 
-      toast(
-        "Encrypted backup downloaded.",
-        "success"
-      );
+    const a =
+      document.createElement("a");
 
-    } catch (error) {
+    a.href = url;
 
-      toast(
-        `Backup failed: ${friendlyError(
-          error
-        )}`,
-        "error"
-      );
-    }
+    a.download =
+      `journal_submission_backup_${today()}.json`;
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+    closeModal();
+
+    toast(
+      "Backup downloaded.",
+      "success"
+    );
   }
 
 
   /* =========================================================
-     UI Event Binding
+     View Event Binding
      ========================================================= */
 
   function bindViewEvents() {
@@ -5804,11 +4682,10 @@ import {
             "edit-sub"
           ) {
             const row =
-              state.submissions
-                .find(
-                  r =>
-                    r.id === id
-                );
+              state.submissions.find(
+                r =>
+                  r.id === id
+              );
 
             if (row) {
               submissionForm(row);
@@ -5820,11 +4697,10 @@ import {
             "view-sub"
           ) {
             const row =
-              state.submissions
-                .find(
-                  r =>
-                    r.id === id
-                );
+              state.submissions.find(
+                r =>
+                  r.id === id
+              );
 
             if (row) {
               viewSubmission(row);
@@ -5861,6 +4737,15 @@ import {
 
           else if (
             action ===
+            "delete-client"
+          ) {
+            await deleteClient(
+              id
+            );
+          }
+
+          else if (
+            action ===
             "new-journal"
           ) {
             journalForm();
@@ -5876,6 +4761,15 @@ import {
             if (row) {
               journalForm(row);
             }
+          }
+
+          else if (
+            action ===
+            "delete-journal"
+          ) {
+            await deleteJournal(
+              id
+            );
           }
 
           else if (
@@ -5944,33 +4838,17 @@ import {
 
         } catch (error) {
           toast(
-            friendlyError(
-              error
-            ),
+            friendlyError(error),
             "error"
           );
         }
       };
-
-
-    const search =
-      $("#fSearch");
-
-    if (search) {
-      search.addEventListener(
-        "keydown",
-        event => {
-          if (
-            event.key ===
-            "Enter"
-          ) {
-            applyFiltersFromUi();
-          }
-        }
-      );
-    }
   }
 
+
+  /* =========================================================
+     Filters
+     ========================================================= */
 
   function applyFiltersFromUi() {
     state.filters = {
@@ -5996,96 +4874,7 @@ import {
           ?.value || ""
     };
 
-    if (
-      state.filters.from &&
-      state.filters.to &&
-      state.filters.from >
-        state.filters.to
-    ) {
-      toast(
-        "From date cannot be later than To date.",
-        "error"
-      );
-
-      return;
-    }
-
     render();
-  }
-
-
-  /* =========================================================
-     Delete Submission
-     ========================================================= */
-
-  async function deleteSubmission(
-    id
-  ) {
-    const row =
-      state.submissions
-        .find(
-          s =>
-            s.id === id
-        );
-
-    if (!row) {
-      return;
-    }
-
-    const journal =
-      journalById(
-        row.journal_id
-      );
-
-    const ok =
-      window.confirm(
-        `Delete this submission?\n\n${row.paper_title}\n${journal?.name || ""}\n\nIts status history will also be deleted.`
-      );
-
-    if (!ok) {
-      return;
-    }
-
-    const historyToDelete =
-      state.history
-        .filter(
-          h =>
-            h.submission_id ===
-            id
-        );
-
-    for (
-      const h of
-      historyToDelete
-    ) {
-      await deleteDoc(
-        doc(
-          userCollection(
-            "history"
-          ),
-          h.id
-        )
-      );
-    }
-
-    await deleteRecord(
-      "submissions",
-      id
-    );
-
-    state.history =
-      state.history.filter(
-        h =>
-          h.submission_id !==
-          id
-      );
-
-    render();
-
-    toast(
-      "Submission deleted.",
-      "success"
-    );
   }
 
 
@@ -6114,48 +4903,17 @@ import {
         "Please enter a valid email address.",
 
       "auth/user-disabled":
-        "This account has been disabled. Contact the administrator.",
+        "This account has been disabled.",
 
       "auth/too-many-requests":
-        "Too many sign-in attempts. Please wait and try again later.",
+        "Too many sign-in attempts.",
 
       "auth/network-request-failed":
-        "Network error. Check your internet connection and try again.",
-
-      "auth/operation-not-allowed":
-        "Email/password sign-in is not enabled in Firebase Authentication.",
-
-      "auth/weak-password":
-        "Password is too weak. Use a stronger password.",
-
-      "auth/expired-action-code":
-        "This password-reset link has expired. Request a new one.",
-
-      "auth/invalid-action-code":
-        "This password-reset link is invalid or has already been used.",
-
-      "auth/user-not-found":
-        "No account was found for this email address."
+        "Network error."
     };
 
     if (known[code]) {
       return known[code];
-    }
-
-    if (
-      /permission-denied|Missing or insufficient permissions/i.test(
-        message
-      )
-    ) {
-      return "This action was blocked by Firestore security rules. Check firebase/firestore.rules.";
-    }
-
-    if (
-      /already-exists|ALREADY_EXISTS|duplicate/i.test(
-        message
-      )
-    ) {
-      return "A record with this ID already exists. Please try again.";
     }
 
     return message;
@@ -6163,16 +4921,11 @@ import {
 
 
   /* =========================================================
-     Forgot Password
+     Authentication
      ========================================================= */
 
   async function forgotPassword() {
     if (!auth) {
-      toast(
-        "Configure Firebase first.",
-        "error"
-      );
-
       return;
     }
 
@@ -6186,45 +4939,27 @@ import {
         "Enter your account email first.",
         "error"
       );
-
       return;
     }
 
     try {
-
-      const redirectUrl =
-        `${window.location.origin}${window.location.pathname}`;
-
       await sendPasswordResetEmail(
         auth,
-        email,
-        {
-          url:
-            redirectUrl,
-
-          handleCodeInApp:
-            true
-        }
+        email
       );
 
-      showAuth(
-        "Password reset email sent. Open the email and use the link to set a new password.",
+      toast(
+        "Password reset email sent.",
         "success"
       );
 
     } catch (error) {
-
-      showAuth(
+      toast(
         friendlyError(error),
         "error"
       );
     }
   }
-
-
-  /* =========================================================
-     Login
-     ========================================================= */
 
   async function login(event) {
     event.preventDefault();
@@ -6254,50 +4989,23 @@ import {
 
     authBusy = true;
 
-    const button =
-      $("#loginForm button[type=submit]");
-
-    button.disabled = true;
-
-    button.textContent =
-      "Signing in...";
-
     try {
-
       await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      toast(
-        "Signed in successfully.",
-        "success"
-      );
-
     } catch (error) {
-
       showAuth(
         friendlyError(error),
         "error"
       );
 
     } finally {
-
       authBusy = false;
-
-      button.disabled =
-        !hasConfig;
-
-      button.textContent =
-        "Sign in";
     }
   }
-
-
-  /* =========================================================
-     Update Password
-     ========================================================= */
 
   async function updatePassword(
     event
@@ -6312,23 +5020,10 @@ import {
     }
 
     const newPassword =
-      $("#newPassword")
-        .value;
+      $("#newPassword").value;
 
     const confirm =
-      $("#confirmPassword")
-        .value;
-
-    if (
-      newPassword.length < 8
-    ) {
-      toast(
-        "Password must be at least 8 characters.",
-        "error"
-      );
-
-      return;
-    }
+      $("#confirmPassword").value;
 
     if (
       newPassword !== confirm
@@ -6337,12 +5032,10 @@ import {
         "Passwords do not match.",
         "error"
       );
-
       return;
     }
 
     try {
-
       await confirmPasswordReset(
         auth,
         resetCode,
@@ -6351,25 +5044,12 @@ import {
 
       resetCode = null;
 
-      $("#newPassword")
-        .value = "";
-
-      $("#confirmPassword")
-        .value = "";
-
-      history.replaceState(
-        {},
-        document.title,
-        window.location.pathname
-      );
-
       showAuth(
-        "Password updated successfully. You can now sign in with your new password.",
+        "Password updated successfully.",
         "success"
       );
 
     } catch (error) {
-
       showReset(
         friendlyError(error),
         "error"
@@ -6377,49 +5057,26 @@ import {
     }
   }
 
-
-  /* =========================================================
-     Sign Out
-     ========================================================= */
-
   async function signOutUser() {
     if (!auth) {
       return;
     }
 
-    try {
+    await signOut(auth);
 
-      await signOut(auth);
+    session = null;
 
-      session = null;
+    state.clients = [];
+    state.journals = [];
+    state.submissions = [];
+    state.history = [];
 
-      state.clients = [];
-      state.journals = [];
-      state.submissions = [];
-      state.history = [];
-
-      showAuth();
-
-      $("#loginPassword")
-        .value = "";
-
-      toast(
-        "Signed out.",
-        "success"
-      );
-
-    } catch (error) {
-
-      toast(
-        friendlyError(error),
-        "error"
-      );
-    }
+    showAuth();
   }
 
 
   /* =========================================================
-     Application Start
+     Start
      ========================================================= */
 
   async function start() {
@@ -6499,12 +5156,10 @@ import {
         }
       );
 
-
     if (!hasConfig) {
       showAuth();
       return;
     }
-
 
     const params =
       new URLSearchParams(
@@ -6517,14 +5172,12 @@ import {
     const code =
       params.get("oobCode");
 
-
     if (
       mode ===
         "resetPassword" &&
       code
     ) {
       try {
-
         await verifyPasswordResetCode(
           auth,
           code
@@ -6536,14 +5189,12 @@ import {
         showReset();
 
       } catch (error) {
-
         showAuth(
           friendlyError(error),
           "error"
         );
       }
     }
-
 
     onAuthStateChanged(
       auth,
@@ -6554,9 +5205,7 @@ import {
             ? { user }
             : null;
 
-
         if (!user) {
-
           state.clients = [];
           state.journals = [];
           state.submissions = [];
@@ -6569,14 +5218,11 @@ import {
           return;
         }
 
-
         if (resetCode) {
           return;
         }
 
-
         try {
-
           await loadCloud();
 
           showApp();
@@ -6584,7 +5230,6 @@ import {
           render();
 
         } catch (error) {
-
           showAuth(
             friendlyError(error),
             "error"
@@ -6593,7 +5238,6 @@ import {
       }
     );
   }
-
 
   start();
 
